@@ -163,6 +163,12 @@ export function diagnose_molang_syntax(expression: ExpressionNode, diagnoser: Di
         objs.push(n.operand);
         // TODO check operator
         break;
+      case NodeType.Loop:
+        objs.push(n.count, n.body);
+        break;
+      case NodeType.Break:
+      case NodeType.Continue:
+        break;
 
       case NodeType.Marker:
       default:

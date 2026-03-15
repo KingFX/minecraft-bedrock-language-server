@@ -2284,3 +2284,73 @@ flowchart TD
     node11 -->|right| node13
     node0 -->|arg1| node11"
 `;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 93. loop(10, { (v.x > 5) ? continue; v.x = v.x + 1; }); 1`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0["Unknown@0"]
+    start-->node0"
+`;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 94. loop(10, { t.x = v.x + v.y; v.x = v.y; v.y = t.x; }); 1`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0["Unknown@0"]
+    start-->node0"
+`;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 95. loop(10, {t.x = v.x + v.y; v.x = v.y; v.y = t.x; (v.y > 20) ? break;}); 1`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0["Unknown@0"]
+    start-->node0"
+`;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 96. loop(10, {loop(10, {v.x = v.x + 1; (v.x > 5) ? break;});}); 1`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0["Unknown@0"]
+    start-->node0"
+`;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 97. t.count = 0; loop(10, {t.found = q.is_sneaking; t.found ? {v.result = 1.0; break;}; t.count = t.count + 1;}); 1`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0{"=@8"}
+    node1[["t.count@0"]]
+    node2["0@10"]
+    start-->node0
+    node0 -->|target| node1
+    node0 -->|value| node2"
+`;
+
+exports[`molang - mermaid - graphs should be able to generate stage diagrams 97. t.count = 0; loop(10, {t.found = q.is_sneaking; t.found ? {v.result = 1.0; break;}; t.count = t.count + 1;}); 2`] = `
+"---
+config:
+    theme: redux
+---
+flowchart TD
+    start@{ shape: sm-circ, label: "Small start" }
+    node0["Unknown@13"]
+    start-->node0"
+`;

@@ -5,14 +5,18 @@ import {
   ArrayAccessNode,
   AssignmentNode,
   BinaryOperationNode,
+  BreakNode,
   ConditionalExpressionNode,
+  ContinueNode,
   ExpressionNode,
   FunctionCallNode,
   LiteralNode,
+  LoopNode,
   MarkerNode,
   NodeType,
   NullishCoalescingNode,
   ResourceReferenceNode,
+  StatementSequenceNode,
   StringLiteralNode,
   UnaryOperationNode,
   VariableNode,
@@ -104,13 +108,13 @@ function parseTokens(tokens: Token[]): ExpressionNode {
   return builder.build();
 }
 
-/** 
- * Filter () {} [] from start or finish if they match 
- * 
+/**
+ * Filter () {} [] from start or finish if they match
+ *
  * This function removes matching opening and closing brackets from the start and end of a token array.
  * It's critical that this function verifies the brackets actually match each other - for example,
  * in `(a) || (b)`, the first `(` matches the first `)`, NOT the last `)`, so we should NOT trim.
- * 
+ *
  * Example behaviors:
  * - `((a))` -> `(a)` -> `a` (trims twice)
  * - `(a)` -> `a` (trims once)
@@ -192,6 +196,16 @@ function trimEnding(tokens: Token[]): Token[] {
  */
 function convertToken(token: Token) {
   switch (token.type) {
+    case TokenType.Break:
+      return BreakNode.create({
+        position: token.position,
+      });
+
+    case TokenType.Continue:
+      return ContinueNode.create({
+        position: token.position,
+      });
+
     case TokenType.Identifier:
       switch (token.value) {
         case 'this':
@@ -322,14 +336,64 @@ function costlyConvertToken(tokens: Token[], startIndex: number): { node: Expres
   const current = tokens[startIndex];
 
   switch (current.type) {
-    case TokenType.OpenBrace:
+    case TokenType.Loop:
+      // loop(count, body) — expect OpenParen after loop keyword
+      if (!Token.oneOfType(tokens[startIndex + 1], TokenType.OpenParen)) {
+        throw MolangSyntaxError.fromToken(current, 'expected ( after loop keyword');
+      }
+      const loopParens = getMatchingTokenSlice(tokens, startIndex + 1);
+      const loopInner = trimBraces(loopParens);
+      const loopParams = splitTokens(loopInner, (item) => item.type === TokenType.Comma);
+      if (loopParams.length !== 2) {
+        throw MolangSyntaxError.fromToken(current, 'loop expects exactly 2 arguments: loop(count, body)');
+      }
+      const countExpr = parseTokens(loopParams[0]);
+      const bodyExpr = parseTokens(loopParams[1]);
+      const loopNode = LoopNode.create({
+        position: current.position,
+        count: countExpr,
+        body: bodyExpr,
+      });
+      Processed.withValue(loopNode, true);
+      return {
+        node: loopNode,
+        startIndex: startIndex + 1 + loopParens.length,
+      };
+
+    case TokenType.OpenBrace: {
+      const code = getMatchingTokenSlice(tokens, startIndex);
+      const inner = trimBraces(code);
+      // Curly brace blocks can contain multiple semicolon-separated statements
+      const statements = splitTokens(inner, (item) => item.type === TokenType.Semicolon)
+        .map(trimEnding)
+        .filter((t) => t.length > 0 && t[0].type !== TokenType.EOF);
+
+      if (statements.length <= 1) {
+        // Single statement (or empty): parse as a single expression
+        return {
+          node: statements.length === 1 ? parseTokens(statements[0]) : parseTokens(inner),
+          startIndex: startIndex + code.length,
+        };
+      }
+
+      // Multiple statements: wrap in a StatementSequenceNode
+      const parsed = statements.map(parseTokens);
+      return {
+        node: StatementSequenceNode.create({
+          position: current.position,
+          statements: parsed,
+        }),
+        startIndex: startIndex + code.length,
+      };
+    }
     case TokenType.OpenBracket:
-    case TokenType.OpenParen:
+    case TokenType.OpenParen: {
       const code = getMatchingTokenSlice(tokens, startIndex);
       return {
         node: parseTokens(trimBraces(code)),
         startIndex: startIndex + code.length,
       };
+    }
     case TokenType.UnaryOperator:
       // Everything that comes after return is part of its expression statement
       if (current.value === 'return') {

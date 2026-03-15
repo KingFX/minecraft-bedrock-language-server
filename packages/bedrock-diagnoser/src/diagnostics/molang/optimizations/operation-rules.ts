@@ -299,8 +299,11 @@ function toNode(node: ExpressionNode): TOp | TValue | TRef {
     default:
     case NodeType.ArrayAccess:
     case NodeType.Assignment:
+    case NodeType.Break:
     case NodeType.Conditional:
+    case NodeType.Continue:
     case NodeType.FunctionCall:
+    case NodeType.Loop:
     case NodeType.StringLiteral:
     case NodeType.Marker:
     case NodeType.NullishCoalescing:

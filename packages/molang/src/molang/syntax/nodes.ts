@@ -14,9 +14,12 @@ export enum NodeType {
   ArrayAccess,
   Assignment,
   BinaryOperation,
+  Break,
   Conditional,
+  Continue,
   FunctionCall,
   Literal,
+  Loop,
   Marker,
   NullishCoalescing,
   ResourceReference,
@@ -199,6 +202,38 @@ export namespace StatementSequenceNode {
   export const is = isfn<StatementSequenceNode>(NodeType.StatementSequence);
 }
 
+/** Represents a loop expression: loop(count, body) */
+export interface LoopNode extends SyntaxNode {
+  type: NodeType.Loop;
+  count: ExpressionNode;
+  body: ExpressionNode;
+}
+
+export namespace LoopNode {
+  export const create = createfn<LoopNode>(NodeType.Loop);
+  export const is = isfn<LoopNode>(NodeType.Loop);
+}
+
+/** Represents a break statement inside a loop */
+export interface BreakNode extends SyntaxNode {
+  type: NodeType.Break;
+}
+
+export namespace BreakNode {
+  export const create = createfn<BreakNode>(NodeType.Break);
+  export const is = isfn<BreakNode>(NodeType.Break);
+}
+
+/** Represents a continue statement inside a loop */
+export interface ContinueNode extends SyntaxNode {
+  type: NodeType.Continue;
+}
+
+export namespace ContinueNode {
+  export const create = createfn<ContinueNode>(NodeType.Continue);
+  export const is = isfn<ContinueNode>(NodeType.Continue);
+}
+
 /** Represents a sequence of statements */
 export interface MarkerNode extends SyntaxNode {
   type: NodeType.Marker;
@@ -215,10 +250,13 @@ export type ExpressionNode =
   | ArrayAccessNode
   | AssignmentNode
   | BinaryOperationNode
+  | BreakNode
   | ConditionalExpressionNode
   | ConditionalNode
+  | ContinueNode
   | FunctionCallNode
   | LiteralNode
+  | LoopNode
   | MarkerNode
   | NullishCoalescingNode
   | ResourceReferenceNode
@@ -243,6 +281,9 @@ export namespace ExpressionNode {
       case NodeType.BinaryOperation:
       case NodeType.NullishCoalescing:
         return [node.left, node.right];
+      case NodeType.Break:
+      case NodeType.Continue:
+        return [];
       case NodeType.Conditional:
         return [node.condition, node.trueExpression, node.falseExpression];
       case NodeType.FunctionCall:
@@ -254,6 +295,8 @@ export namespace ExpressionNode {
       case NodeType.Variable:
       default:
         return [];
+      case NodeType.Loop:
+        return [node.count, node.body];
       case NodeType.StatementSequence:
         return [...node.statements];
       case NodeType.UnaryOperation:
@@ -283,6 +326,10 @@ export namespace ExpressionNode {
         case NodeType.Literal:
         case NodeType.StringLiteral:
           return node.position + node.value.length;
+        case NodeType.Break:
+          return node.position + 5; // length of 'break'
+        case NodeType.Continue:
+          return node.position + 8; // length of 'continue'
         case NodeType.Marker:
           return node.token.position + node.token.value.length;
         case NodeType.ArrayAccess:
@@ -299,6 +346,9 @@ export namespace ExpressionNode {
         case NodeType.FunctionCall:
           const args = node.arguments;
           args.forEach((arg) => (node = max(node, arg)));
+          break;
+        case NodeType.Loop:
+          node = max(node.count, node.body);
           break;
         case NodeType.StatementSequence:
           const stats = node.statements;

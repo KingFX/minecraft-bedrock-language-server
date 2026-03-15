@@ -113,4 +113,13 @@ export const valid_syntaxes = [
   'c.other->q.remaining_durability',
   'c.other->q.max_durability',
   'math.min(q.remaining_durability + c.other->q.remaining_durability + math.floor(q.max_durability / 20), c.other->q.max_durability)',
+
+  // Loop expressions
+  'loop(10, { (v.x > 5) ? continue; v.x = v.x + 1; });',
+  'loop(10, { t.x = v.x + v.y; v.x = v.y; v.y = t.x; });',
+  'loop(10, {t.x = v.x + v.y; v.x = v.y; v.y = t.x; (v.y > 20) ? break;});',
+  'loop(10, {loop(10, {v.x = v.x + 1; (v.x > 5) ? break;});});',
+
+  // Complex loop with function calls and semicolons inside braces
+  't.count = 0; loop(10, {t.found = q.is_sneaking; t.found ? {v.result = 1.0; break;}; t.count = t.count + 1;});',
 ];

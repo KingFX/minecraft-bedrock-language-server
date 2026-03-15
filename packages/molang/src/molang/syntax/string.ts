@@ -8,6 +8,10 @@ export function nodesToString(node: ExpressionNode): string {
       return `${nodesToString(node.left)} = ${nodesToString(node.right)}`;
     case NodeType.BinaryOperation:
       return `(${nodesToString(node.left)} ${node.operator} ${nodesToString(node.right)})`;
+    case NodeType.Break:
+      return 'break';
+    case NodeType.Continue:
+      return 'continue';
     case NodeType.Conditional:
       return `(${nodesToString(node.condition)} ? ${nodesToString(node.trueExpression)} : ${nodesToString(node.falseExpression!)})`;
     case NodeType.FunctionCall:
@@ -15,6 +19,8 @@ export function nodesToString(node: ExpressionNode): string {
       return `${id}(${node.arguments.map(nodesToString).join(', ')})`;
     case NodeType.Literal:
       return node.value;
+    case NodeType.Loop:
+      return `loop(${nodesToString(node.count)}, ${nodesToString(node.body)})`;
     case NodeType.Marker:
       return node.token.value;
     case NodeType.NullishCoalescing:

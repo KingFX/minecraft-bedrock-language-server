@@ -18,13 +18,16 @@ export enum TokenType {
   Arrow,
   Assignment,
   Boolean,
+  Break,
   CloseBrace,
   CloseBracket,
   CloseParen,
   Colon,
   Comma,
+  Continue,
   Dot,
   Identifier,
+  Loop,
   NamespacedIdentifier,
   NullishCoalescing,
   Number,
@@ -104,6 +107,27 @@ export function tokenize(input: string): Token[] {
     if (char === 'f' && input.slice(pos, pos + 5) === 'false') {
       tokens.push({ type: TokenType.Boolean, value: 'false', position: pos });
       pos += 5;
+      continue;
+    }
+
+    // Keyword: loop
+    if (char === 'l' && input.slice(pos, pos + 4) === 'loop' && !isAlphaNumeric(input[pos + 4] ?? '')) {
+      tokens.push({ type: TokenType.Loop, value: 'loop', position: pos });
+      pos += 4;
+      continue;
+    }
+
+    // Keyword: break
+    if (char === 'b' && input.slice(pos, pos + 5) === 'break' && !isAlphaNumeric(input[pos + 5] ?? '')) {
+      tokens.push({ type: TokenType.Break, value: 'break', position: pos });
+      pos += 5;
+      continue;
+    }
+
+    // Keyword: continue
+    if (char === 'c' && input.slice(pos, pos + 8) === 'continue' && !isAlphaNumeric(input[pos + 8] ?? '')) {
+      tokens.push({ type: TokenType.Continue, value: 'continue', position: pos });
+      pos += 8;
       continue;
     }
 
@@ -282,10 +306,13 @@ function checkUnaryOperators(item: Token, index: number, items: Token[]) {
     case TokenType.ArrayAccess:
     case TokenType.Arrow:
     case TokenType.Assignment:
+    case TokenType.Break:
     case TokenType.Colon:
     case TokenType.Comma:
+    case TokenType.Continue:
     case TokenType.Dot:
     case TokenType.EOF:
+    case TokenType.Loop:
     case TokenType.NullishCoalescing:
     case TokenType.OpenBrace:
     case TokenType.OpenBracket:

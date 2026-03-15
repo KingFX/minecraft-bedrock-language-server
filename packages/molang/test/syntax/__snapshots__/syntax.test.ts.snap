@@ -2092,12 +2092,12 @@ exports[`molang - syntax should be able to parse and match the syntax tree gener
             ],
             "position": 52,
             "scope": "variable",
-            "type": 12,
+            "type": 15,
           },
           "position": 76,
           "right": {
             "position": 79,
-            "type": 5,
+            "type": 7,
             "value": "0.0",
           },
           "type": "NullishCoalescing",
@@ -2161,12 +2161,12 @@ exports[`molang - syntax should be able to parse and match the syntax tree gener
             ],
             "position": 52,
             "scope": "variable",
-            "type": 12,
+            "type": 15,
           },
           "position": 76,
           "right": {
             "position": 79,
-            "type": 5,
+            "type": 7,
             "value": "0.0",
           },
           "type": "NullishCoalescing",
@@ -2989,12 +2989,12 @@ exports[`molang - syntax should be able to parse and match the syntax tree gener
             ],
             "position": 52,
             "scope": "variable",
-            "type": 12,
+            "type": 15,
           },
           "position": 76,
           "right": {
             "position": 79,
-            "type": 5,
+            "type": 7,
             "value": "0.0",
           },
           "type": "NullishCoalescing",
@@ -3058,12 +3058,12 @@ exports[`molang - syntax should be able to parse and match the syntax tree gener
             ],
             "position": 52,
             "scope": "variable",
-            "type": 12,
+            "type": 15,
           },
           "position": 76,
           "right": {
             "position": 79,
-            "type": 5,
+            "type": 7,
             "value": "0.0",
           },
           "type": "NullishCoalescing",
@@ -4854,6 +4854,556 @@ exports[`molang - syntax should be able to parse and match the syntax tree gener
     "position": 0,
     "scope": "math",
     "type": "FunctionCall",
+  },
+]
+`;
+
+exports[`molang - syntax should be able to parse and match the syntax tree generated 93. loop(10, { (v.x > 5) ? continue; v.x = v.x + 1; }); 1`] = `
+[
+  {
+    "_processed": true,
+    "body": {
+      "position": 9,
+      "statements": [
+        {
+          "_processed": true,
+          "condition": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "x",
+              ],
+              "position": 12,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "operator": ">",
+            "position": 16,
+            "right": {
+              "position": 18,
+              "type": "Literal",
+              "value": "5",
+            },
+            "type": "BinaryOperation",
+          },
+          "falseExpression": {
+            "position": 21,
+            "type": "Literal",
+            "value": "0",
+          },
+          "position": 21,
+          "trueExpression": {
+            "position": 23,
+            "type": "Continue",
+          },
+          "type": "Conditional",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "x",
+            ],
+            "position": 33,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "position": 37,
+          "right": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "x",
+              ],
+              "position": 39,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "operator": "+",
+            "position": 43,
+            "right": {
+              "position": 45,
+              "type": "Literal",
+              "value": "1",
+            },
+            "type": "BinaryOperation",
+          },
+          "type": "Assignment",
+        },
+      ],
+      "type": "StatementSequence",
+    },
+    "count": {
+      "position": 5,
+      "type": "Literal",
+      "value": "10",
+    },
+    "position": 0,
+    "type": "Loop",
+  },
+]
+`;
+
+exports[`molang - syntax should be able to parse and match the syntax tree generated 94. loop(10, { t.x = v.x + v.y; v.x = v.y; v.y = t.x; }); 1`] = `
+[
+  {
+    "_processed": true,
+    "body": {
+      "position": 9,
+      "statements": [
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "x",
+            ],
+            "position": 11,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "position": 15,
+          "right": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "x",
+              ],
+              "position": 17,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "operator": "+",
+            "position": 21,
+            "right": {
+              "names": [
+                "y",
+              ],
+              "position": 23,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "type": "BinaryOperation",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "x",
+            ],
+            "position": 28,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "position": 32,
+          "right": {
+            "names": [
+              "y",
+            ],
+            "position": 34,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "y",
+            ],
+            "position": 39,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "position": 43,
+          "right": {
+            "names": [
+              "x",
+            ],
+            "position": 45,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "type": "Assignment",
+        },
+      ],
+      "type": "StatementSequence",
+    },
+    "count": {
+      "position": 5,
+      "type": "Literal",
+      "value": "10",
+    },
+    "position": 0,
+    "type": "Loop",
+  },
+]
+`;
+
+exports[`molang - syntax should be able to parse and match the syntax tree generated 95. loop(10, {t.x = v.x + v.y; v.x = v.y; v.y = t.x; (v.y > 20) ? break;}); 1`] = `
+[
+  {
+    "_processed": true,
+    "body": {
+      "position": 9,
+      "statements": [
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "x",
+            ],
+            "position": 10,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "position": 14,
+          "right": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "x",
+              ],
+              "position": 16,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "operator": "+",
+            "position": 20,
+            "right": {
+              "names": [
+                "y",
+              ],
+              "position": 22,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "type": "BinaryOperation",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "x",
+            ],
+            "position": 27,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "position": 31,
+          "right": {
+            "names": [
+              "y",
+            ],
+            "position": 33,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "y",
+            ],
+            "position": 38,
+            "scope": "v",
+            "type": "Variable",
+          },
+          "position": 42,
+          "right": {
+            "names": [
+              "x",
+            ],
+            "position": 44,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "condition": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "y",
+              ],
+              "position": 50,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "operator": ">",
+            "position": 54,
+            "right": {
+              "position": 56,
+              "type": "Literal",
+              "value": "20",
+            },
+            "type": "BinaryOperation",
+          },
+          "falseExpression": {
+            "position": 60,
+            "type": "Literal",
+            "value": "0",
+          },
+          "position": 60,
+          "trueExpression": {
+            "position": 62,
+            "type": "Break",
+          },
+          "type": "Conditional",
+        },
+      ],
+      "type": "StatementSequence",
+    },
+    "count": {
+      "position": 5,
+      "type": "Literal",
+      "value": "10",
+    },
+    "position": 0,
+    "type": "Loop",
+  },
+]
+`;
+
+exports[`molang - syntax should be able to parse and match the syntax tree generated 96. loop(10, {loop(10, {v.x = v.x + 1; (v.x > 5) ? break;});}); 1`] = `
+[
+  {
+    "_processed": true,
+    "body": {
+      "_processed": true,
+      "body": {
+        "position": 19,
+        "statements": [
+          {
+            "_processed": true,
+            "left": {
+              "names": [
+                "x",
+              ],
+              "position": 20,
+              "scope": "v",
+              "type": "Variable",
+            },
+            "position": 24,
+            "right": {
+              "_processed": true,
+              "left": {
+                "names": [
+                  "x",
+                ],
+                "position": 26,
+                "scope": "v",
+                "type": "Variable",
+              },
+              "operator": "+",
+              "position": 30,
+              "right": {
+                "position": 32,
+                "type": "Literal",
+                "value": "1",
+              },
+              "type": "BinaryOperation",
+            },
+            "type": "Assignment",
+          },
+          {
+            "_processed": true,
+            "condition": {
+              "_processed": true,
+              "left": {
+                "names": [
+                  "x",
+                ],
+                "position": 36,
+                "scope": "v",
+                "type": "Variable",
+              },
+              "operator": ">",
+              "position": 40,
+              "right": {
+                "position": 42,
+                "type": "Literal",
+                "value": "5",
+              },
+              "type": "BinaryOperation",
+            },
+            "falseExpression": {
+              "position": 45,
+              "type": "Literal",
+              "value": "0",
+            },
+            "position": 45,
+            "trueExpression": {
+              "position": 47,
+              "type": "Break",
+            },
+            "type": "Conditional",
+          },
+        ],
+        "type": "StatementSequence",
+      },
+      "count": {
+        "position": 15,
+        "type": "Literal",
+        "value": "10",
+      },
+      "position": 10,
+      "type": "Loop",
+    },
+    "count": {
+      "position": 5,
+      "type": "Literal",
+      "value": "10",
+    },
+    "position": 0,
+    "type": "Loop",
+  },
+]
+`;
+
+exports[`molang - syntax should be able to parse and match the syntax tree generated 97. t.count = 0; loop(10, {t.found = q.is_sneaking; t.found ? {v.result = 1.0; break;}; t.count = t.count + 1;}); 1`] = `
+[
+  {
+    "_processed": true,
+    "left": {
+      "names": [
+        "count",
+      ],
+      "position": 0,
+      "scope": "t",
+      "type": "Variable",
+    },
+    "position": 8,
+    "right": {
+      "position": 10,
+      "type": "Literal",
+      "value": "0",
+    },
+    "type": "Assignment",
+  },
+  {
+    "_processed": true,
+    "body": {
+      "position": 22,
+      "statements": [
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "found",
+            ],
+            "position": 23,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "position": 31,
+          "right": {
+            "arguments": [],
+            "names": [
+              "is_sneaking",
+            ],
+            "position": 33,
+            "scope": "q",
+            "type": "FunctionCall",
+          },
+          "type": "Assignment",
+        },
+        {
+          "_processed": true,
+          "condition": {
+            "names": [
+              "found",
+            ],
+            "position": 48,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "falseExpression": {
+            "position": 56,
+            "type": "Literal",
+            "value": "0",
+          },
+          "position": 56,
+          "trueExpression": {
+            "position": 58,
+            "statements": [
+              {
+                "_processed": true,
+                "left": {
+                  "names": [
+                    "result",
+                  ],
+                  "position": 59,
+                  "scope": "v",
+                  "type": "Variable",
+                },
+                "position": 68,
+                "right": {
+                  "position": 70,
+                  "type": "Literal",
+                  "value": "1.0",
+                },
+                "type": "Assignment",
+              },
+              {
+                "position": 75,
+                "type": "Break",
+              },
+            ],
+            "type": "StatementSequence",
+          },
+          "type": "Conditional",
+        },
+        {
+          "_processed": true,
+          "left": {
+            "names": [
+              "count",
+            ],
+            "position": 84,
+            "scope": "t",
+            "type": "Variable",
+          },
+          "position": 92,
+          "right": {
+            "_processed": true,
+            "left": {
+              "names": [
+                "count",
+              ],
+              "position": 94,
+              "scope": "t",
+              "type": "Variable",
+            },
+            "operator": "+",
+            "position": 102,
+            "right": {
+              "position": 104,
+              "type": "Literal",
+              "value": "1",
+            },
+            "type": "BinaryOperation",
+          },
+          "type": "Assignment",
+        },
+      ],
+      "type": "StatementSequence",
+    },
+    "count": {
+      "position": 18,
+      "type": "Literal",
+      "value": "10",
+    },
+    "position": 13,
+    "type": "Loop",
   },
 ]
 `;

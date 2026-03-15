@@ -1,10 +1,9 @@
-
 import { parseMolang } from '../../src/molang/syntax/parse';
 import { valid_syntaxes } from '../data/dataset-valid';
 import { ExpressionNode, NodeType } from '../../src/molang/syntax/nodes';
 import { invalid_syntaxes } from '../data/dataset-invalid';
 import { MolangSyntaxError } from '../../src/molang';
-import { OffsetWord } from "bc-minecraft-bedrock-shared";
+import { OffsetWord } from 'bc-minecraft-bedrock-shared';
 
 describe('molang - syntax', () => {
   describe('should be able to parse and match the syntax tree generated', () => {
@@ -38,6 +37,9 @@ function cleanupNodes(node: ExpressionNode) {
       break;
     case NodeType.FunctionCall:
       node.arguments.forEach(cleanupNodes);
+      break;
+    case NodeType.Loop:
+      [node.count, node.body].forEach(cleanupNodes);
       break;
     case NodeType.UnaryOperation:
       cleanupNodes(node.operand);
@@ -83,6 +85,9 @@ function validateNode(node: ExpressionNode): void {
       break;
     case NodeType.Marker:
       throw new Error(`found a marker object: ${JSON.stringify(node)}`);
+    case NodeType.Loop:
+      [node.count, node.body].forEach(validateNode);
+      break;
     case NodeType.Literal:
     case NodeType.NullishCoalescing:
     case NodeType.ResourceReference:

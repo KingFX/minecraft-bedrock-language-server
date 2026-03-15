@@ -1,7 +1,7 @@
 import { assert } from 'console';
 import { SyntaxBuilder } from './builder';
 import { MolangSyntaxError } from './errors';
-import { ExpressionNode, NodeType, StatementSequenceNode } from './nodes';
+import { ExpressionNode, LiteralNode, NodeType, StatementSequenceNode } from './nodes';
 import { TokenType } from './tokens';
 
 export function processOperators(builder: SyntaxBuilder) {
@@ -153,7 +153,32 @@ function processTernaryOperators(builder: SyntaxBuilder) {
     }
 
     if (colonIndex === -1) {
-      throw new MolangSyntaxError('Ternary operator missing colon', current.position, '?');
+      // Molang supports condition ? trueExpr (without : falseExpr)
+      // In this case, everything after ? is the true expression and false implicitly returns 0
+      if (i + 1 < statements.length) {
+        trueExpr = wrapIf(statements.slice(i + 1));
+        endIndex = statements.length - 1;
+      }
+
+      if (!trueExpr) {
+        throw new MolangSyntaxError('Ternary operator missing true expression', current.position, '?');
+      }
+
+      // Use a literal 0 as the implicit false expression
+      falseExpr = LiteralNode.create({
+        position: current.position,
+        value: '0',
+      });
+
+      // Update the conditional expression node
+      current.condition = condition;
+      current.trueExpression = trueExpr;
+      current.falseExpression = falseExpr;
+
+      // Remove all the processed elements and replace with the complete conditional
+      const elementsToRemove = endIndex - startIndex;
+      builder.result.statements.splice(startIndex, elementsToRemove + 1, current);
+      continue;
     }
 
     // Extract true and false expressions
